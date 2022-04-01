@@ -98,9 +98,6 @@ export default function Mint() {
 				) : (<></>)
 				
 			}
-			<div><p></p><a> <img src="dogs.png" alt="Acceptance" width="600" height="480" />
-				<p></p>
-			</a></div>
 			{
 				loading && (
 					<LoadingSpinner />
