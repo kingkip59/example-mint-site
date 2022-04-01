@@ -1,78 +1,112 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { Address } from "../components/Address";
+import { LoadingSpinner } from "../components/LoadingSpinner";
+import { connect } from "../utilities/connect";
+import { publicMint, getMintInfo } from "../utilities/mint";
 
-// IMPORTANT NOTE: In this example, the URI is used as a unique key to identify
-// a token associated with an asset. This is fine for demonstration, but in a 
-// production project you should have a unique key associated with the asset
-// and store that in the contract along with the URI.
-export default function Mint(props) {
+const STATUS = {
+	ERROR: 'error',
+	SUCCESS: 'success',
+};
 
-	const [assetURIs, setAssetURIs] = useState([]);
+export default function Mint() {
+	const [status, setStatus] = useState();
+	const [loading, setLoading] = useState();
+	const [mintInfo, setMintInfo] = useState({});
+	const [quantity, setQuantity] = useState(1);
+	const {
+		address,
+		signer,
+		totalSupply,
+	} = mintInfo;
 
-	// Populate the assetURIs variable with tokens that are not yet minted.
-	const CheckAssetURIs = async () => {
-		let uris = [];
-
-		// For this demo there are only 4 assets, named sequentially. 
-		for(let idx = 1; idx <= 4; idx++ ){
-			let uri = '/token_data/exobit_'+idx+'.json';
-			// Call the contract and get the id of the uri. If the uri doesn't belong to a token, it will return 0.
-			let tokenId = await props.contract.methods.tokenByUri(uri).call();
-			// The token ID comes in as a string. "0" means that uri is not associated with a token.
-			if(tokenId === "0") uris.push(uri);
+	async function handleConnect() {
+		try {
+			setLoading(true)
+			const { address, provider, signer } = await connect();
+			const { chainId } = await provider.getNetwork();
+			if (chainId !== 1 && chainId !== 4) {
+				throw Error("Wrong network, please change to the correct network and try again.")
+			}
+			const {
+				totalSupply,
+			} = await getMintInfo();
+			setMintInfo({
+				address,
+				provider,
+				signer,
+				totalSupply,
+				chainId
+			})
+			setLoading(false)
+		} catch (error) {
+			console.log('connect', error)
+			setStatus({
+				type: STATUS.ERROR,
+				message: error?.error?.message || error?.reason || error?.message
+			});
+			setLoading(false);
 		}
-
-		// Update the list of available asset URIs
-		if(uris.length) setAssetURIs([...uris]);
 	}
 
-	// Handle the click to mint
-	const DoMint = async (tokenURI) => {
-		console.log('minting: ', tokenURI);
-		try{
-			// Estimate the gas required for the transaction
-			let gasLimit = await props.contract.methods.CustomMint(tokenURI).estimateGas(
-				{ 
-					from: props.address, 
-					value: 100000000000000
-				}
-			);
-			// Call the mint function.
-			let result = await props.contract.methods.CustomMint(tokenURI)
-				.send({ 
-					from: props.address, 
-					value: 100000000000000,
-					// Setting the gasLimit with the estimate accuired above helps ensure accurate estimates in the wallet transaction.
-					gasLimit: gasLimit
-				});
 
-			// Output the result for the console during development. This will help with debugging transaction errors.
-			console.log('result', result);
-
-			// Refresh the gallery
-			CheckAssetURIs();
-
-		}catch(e){
-			console.error('There was a problem while minting', e);
+	async function handleMint() {
+		try {
+			const receipt = await publicMint({
+				amount: quantity * 0.0418,
+				signer,
+			})
+			setStatus({
+				type: STATUS.SUCCESS,
+				message: `<a href="https://etherscan.io/tx/${receipt?.hash}" target="_blank" rel="noreferrer">Check out your transaction on Etherscan</a>.`,
+			});
+		} catch (error) {
+			setStatus({
+				type: STATUS.ERROR,
+				message: error?.error?.message || error?.reason || error?.message
+			});
 		}
-	};
+	}
 
-	// Handle contract unavailable. 
-	// This is an extra precaution since the user shouldn't be able to get to this page without connecting.
-	if(!props.contract) return (<div className="page error">Contract Not Available</div>);
-
-	// Set up the list of available token URIs when the component mounts.
-	if(!assetURIs.length) CheckAssetURIs();
-
-	// Display the minting gallery
 	return (
-		<div className="page mint">
-			<h2>Click on an image to mint a token</h2>
-			{assetURIs.map((uri, idx) => (
-					<div onClick={() => DoMint(uri)} key={idx}>
-						<img src={uri.replace('.json', '.png')} alt={'exobit_'+(idx+1)} />
+		<>
+			<Address address={address} />
+			<h1>Welcome to the Lucy's Colorful Friends</h1>
+			{
+				status?.type && (
+					<div className="content">
+						<p className={status?.type} dangerouslySetInnerHTML={{ __html: status?.message }} />
 					</div>
 				)
-			)}
-		</div>
-	);
+			}
+			{
+				!address && !loading ? (
+					<button onClick={handleConnect}>Connect</button>
+				) : (<></>)
+			}
+			{
+				loading && (
+					<LoadingSpinner />
+				)
+			}
+			{
+				address && (
+					<h1>{totalSupply} / 300</h1>
+				)
+			}
+			{
+				address && (
+					<>
+						<div className="amount">
+							<label htmlFor="One">Number of Friends</label>
+							<br />
+							<input type="number" id="One" name="mint_amount" defaultValue={1} onChange={(e) => setQuantity(e.target.value)} />
+						</div>
+						<br />
+						<button onClick={() => handleMint()}>Mint</button>
+					</>
+				)
+			}
+		</>
+	)
 }
