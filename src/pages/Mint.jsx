@@ -71,17 +71,27 @@ export default function Mint() {
 	return (
 		<>
 			<Address address={address} />
-			<h1>Welcome to the Lucy's Colorful Friends</h1>
+			<h1>Welcome to Lucy's Colorful Friends NFT</h1>
+			<a> <img src="hearts.png" alt="Acceptance" width="600" height="343" />
+			<p></p>
+			</a>
+			<a href="https://medium.com/@kipinvestment1/lucys-colorful-friends-f5c655af98a5" target="_blank">
+				<button> View Medium </button>
+				
+				<p></p>
+			</a>
+			
 			{
 				status?.type && (
 					<div className="content">
 						<p className={status?.type} dangerouslySetInnerHTML={{ __html: status?.message }} />
+					
 					</div>
 				)
 			}
 			{
 				!address && !loading ? (
-					<button onClick={handleConnect}>Connect</button>
+					<button onClick={handleConnect}>Connect Wallet</button>
 				) : (<></>)
 			}
 			{

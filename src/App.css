@@ -57,7 +57,35 @@ a.button{
 	cursor: pointer;
 	text-decoration: none;
 }
+/* BUTTONS */
 
+a.btn {
+	display: inline-block;
+	padding: 1rem 2rem;
+	background: var(--btn-bg-color);
+	color: var(--accent-color);
+	font-family: var(--font-secondary);
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1rem;
+	text-transform: capitalize;
+	transition: all 0.3s ease;
+	box-shadow: 4px 4px 0 0 var(--accent-color);
+	cursor: pointer;
+	position: relative;
+	text-decoration: none;
+	outline: none;
+}
+
+.btn:hover {
+	box-shadow: none;
+}
+
+.hero-btn {
+	border-radius: 4px;
+	font-size: 1.2rem;
+	padding: 1.5rem 3rem;
+}
 /*
 		HEADER
 */
@@ -106,3 +134,4 @@ button.login{
 	font-size: 14px;
   margin-top: -16px;
 }
+
