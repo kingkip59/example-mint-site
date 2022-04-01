@@ -71,7 +71,10 @@ export default function Mint() {
 	return (
 		<>
 			<Address address={address} />
-			<h1>Welcome to Lucy's Colorful Friends NFT</h1>
+			<a>
+				<p></p>
+			</a>
+			<h2>Welcome to Lucy's Colorful Friends NFT</h2>
 			<a> <img src="hearts.png" alt="Acceptance" width="600" height="343" />
 			<p></p>
 			</a>
@@ -93,7 +96,11 @@ export default function Mint() {
 				!address && !loading ? (
 					<button onClick={handleConnect}>Connect Wallet</button>
 				) : (<></>)
+				
 			}
+			<div><p></p><a> <img src="dogs.png" alt="Acceptance" width="600" height="480" />
+				<p></p>
+			</a></div>
 			{
 				loading && (
 					<LoadingSpinner />
