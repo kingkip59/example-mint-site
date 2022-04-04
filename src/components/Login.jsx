@@ -5,7 +5,7 @@ import abi from '../contract/abi.json';
 
 export default function Login(props) {
 
-	const contractAddress = "0xC9044bEB7Af735cDDCd070a541727886baaA5a06";
+	const contractAddress = "0x56C72fADe149b6B180283936207B2E7dc851836a";
 
 	const DoConnect = async () => {
 
