@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import abi from "../contract/abi.json";
 
-const CONTRACT = "0xA40F58cdF245bfB665ba1BE5294BADB2eB689751";
+const CONTRACT = "0xC9044bEB7Af735cDDCd070a541727886baaA5a06";
 
 export async function publicMint({ amount, signer }) {
     const contract = new ethers.Contract(CONTRACT, abi, signer);
