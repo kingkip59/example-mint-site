@@ -75,7 +75,7 @@ export default function Mint() {
 				<p></p>
 			</a>
 			<h2>Welcome to Lucy's Colorful Friends NFT</h2>
-			<a> <img src="hearts.png" alt="Acceptance" width="600" height="343" />
+			<a> <img src="hearts.png" alt="Acceptance" width="300" height="171.5" />
 			<p></p>
 			</a>
 			<a href="https://medium.com/@kipinvestment1/lucys-colorful-friends-f5c655af98a5" target="_blank">
