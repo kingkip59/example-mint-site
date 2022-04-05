@@ -78,6 +78,9 @@ export default function Mint() {
 			<a> <img src="hearts.png" alt="Acceptance" width="300" height="171.5" />
 			<p></p>
 			</a>
+			<a> <img src="LCF_dogs.png" alt="Dogs" width="300" height="240" />
+				<p></p>
+			</a>
 			<a href="https://medium.com/@kipinvestment1/lucys-colorful-friends-f5c655af98a5" target="_blank">
 				<button> View Medium </button>
 				
